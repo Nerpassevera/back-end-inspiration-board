@@ -57,6 +57,7 @@ def get_one_instance(cls, instance_id):
 
     return { cls.__name__.lower(): instance.to_dict() if instance else instance}, 200
 
+# USED
 def update_instance(cls, instance_id, request):
     instance = validate_model(cls, instance_id)
     req_body = request.get_json()
