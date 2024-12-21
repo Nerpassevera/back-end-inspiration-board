@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.routes.route_utilities import create_class_instance, get_all_instances
+from app.routes.route_utilities import create_class_instance, get_all_instances, get_one_instance
 from app.models.board import Board
 bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 
@@ -11,3 +11,7 @@ def get_all_boards():
 @bp.post('/')
 def create_board():
     return create_class_instance(Board, request, ["title", "owner"])
+
+@bp.get("/<board_id>", strict_slashes=False)
+def get_one_board(board_id):
+    return get_one_instance(Board, board_id)
