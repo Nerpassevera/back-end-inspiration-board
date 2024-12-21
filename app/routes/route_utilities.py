@@ -6,6 +6,7 @@ def apply_filters(cls, arguments, query):
         if hasattr(cls, attribute):
             query = query.where(getattr(cls, attribute).ilike(f"%{value}%"))
 
+# USED
 def validate_model(cls, cls_id):
     try:
         cls_id = int(cls_id)
