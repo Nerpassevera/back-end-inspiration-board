@@ -68,6 +68,7 @@ def update_instance(cls, instance_id, request):
     db.session.commit()
     return { cls.__name__.lower(): instance.to_dict() }, 200
 
+# USED
 def delete_instance(cls, instance_id):
     instance = validate_model(cls, instance_id)
     db.session.delete(instance)
