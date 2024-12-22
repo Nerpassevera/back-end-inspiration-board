@@ -1,17 +1,18 @@
 from flask import abort, make_response
 from app.db import db
 
+
 def apply_filters(cls, arguments, query):
     for attribute, value in arguments:
         if hasattr(cls, attribute):
             query = query.where(getattr(cls, attribute).ilike(f"%{value}%"))
 
-# USED
+
 def validate_model(cls, cls_id):
     try:
         cls_id = int(cls_id)
     except ValueError:
-        message = { "message": f"{cls.__name__} ID {cls_id} is invalid"}
+        message = {"message": f"{cls.__name__} ID {cls_id} is invalid"}
         abort(make_response(message, 400))
 
     query = db.select(cls).where(cls.id == cls_id)
@@ -28,7 +29,7 @@ def set_new_attributes(instance, req_body):
         if hasattr(instance, attr):
             setattr(instance, attr, value)
 
-# USED
+
 def create_class_instance(cls, request, required_fields, additional_data=None):
     req_body = request.get_json()
 
@@ -51,14 +52,14 @@ def create_class_instance(cls, request, required_fields, additional_data=None):
 
     return {cls.__name__.lower(): new_instance.to_dict()}, 201
 
-# USED
+
 def get_all_instances(cls, args):
     sort = args.get("sort")
-    # query = db.select(cls).order_by(cls.title.desc() if sort=="desc" else cls.title) 
+    # query = db.select(cls).order_by(cls.title.desc() if sort=="desc" else cls.title)
     query = db.select(cls)
-    
+
     sort_field = "message" if hasattr(cls, "message") else "title"
-    
+
     if sort == "desc":
         query = query.order_by(getattr(cls, sort_field).desc())
     else:
@@ -69,13 +70,13 @@ def get_all_instances(cls, args):
     instances = db.session.scalars(query)
     return [instance.to_dict() for instance in instances], 200
 
-# USED
+
 def get_one_instance(cls, instance_id):
     instance = validate_model(cls, instance_id)
 
-    return { cls.__name__.lower(): instance.to_dict() if instance else instance}, 200
+    return {cls.__name__.lower(): instance.to_dict() if instance else instance}, 200
 
-# USED
+
 def update_instance(cls, instance_id, request):
     instance = validate_model(cls, instance_id)
     req_body = request.get_json()
@@ -85,13 +86,12 @@ def update_instance(cls, instance_id, request):
     set_new_attributes(instance, req_body)
 
     db.session.commit()
-    return { cls.__name__.lower(): instance.to_dict() }, 200
+    return {cls.__name__.lower(): instance.to_dict()}, 200
 
-# USED
+
 def delete_instance(cls, instance_id):
     instance = validate_model(cls, instance_id)
     db.session.delete(instance)
     db.session.commit()
 
     return {"details": f'{cls.__name__} {instance.id} successfully deleted'}, 200
-    # return {"details": f'{cls.__name__} {instance.id} "{instance.title}" successfully deleted'}, 200
