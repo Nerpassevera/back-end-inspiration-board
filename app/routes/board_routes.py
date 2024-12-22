@@ -34,6 +34,7 @@ def get_task_of_board(board_id):
 
     return {
         "id": board.id,
+        "owner": board.owner,
         "title": board.title,
         "cards": [card.to_dict() for card in board.cards]
     }
