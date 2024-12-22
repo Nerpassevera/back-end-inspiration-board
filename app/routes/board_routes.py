@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from app.routes.route_utilities import create_class_instance, get_all_instances, get_one_instance, delete_instance, update_instance, validate_model
 from app.models.board import Board
+
 bp = Blueprint("boards_bp", __name__, url_prefix="/boards")
 
 @bp.get('/')
@@ -53,3 +54,4 @@ def get_task_of_board(board_id):
 #         "id": board.id,
 #         "task_ids": [task.id for task in board.cards]
 #     }
+

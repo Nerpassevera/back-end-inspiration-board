@@ -45,7 +45,15 @@ def create_class_instance(cls, request, required_fields):
 # USED
 def get_all_instances(cls, args):
     sort = args.get("sort")
-    query = db.select(cls).order_by(cls.title.desc() if sort=="desc" else cls.title)
+    # query = db.select(cls).order_by(cls.title.desc() if sort=="desc" else cls.title) 
+    query = db.select(cls)
+    
+    sort_field = "message" if hasattr(cls, "message") else "title"
+    
+    if sort == "desc":
+        query = query.order_by(getattr(cls, sort_field).desc())
+    else:
+        query = query.order_by(getattr(cls, sort_field))
 
     apply_filters(cls, args.items(), query)
 
