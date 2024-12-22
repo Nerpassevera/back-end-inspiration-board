@@ -16,3 +16,7 @@ def get_one_card(card_id):
 @bp.patch('/<card_id>')
 def update_card(card_id):
     return update_instance(Card, card_id, request)
+
+@bp.delete("/<card_id>", strict_slashes=False)
+def delete_card(card_id):
+    return delete_instance(Card, card_id)
