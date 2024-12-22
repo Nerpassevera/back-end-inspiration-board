@@ -40,19 +40,4 @@ def get_task_of_board(board_id):
 
 @bp.post("/<board_id>/cards")
 def create_card_for_board(board_id):
-    board = validate_model(Board, board_id)
-    card_ids = request.get_json().get("cards", [])
-    list_of_cards = []
-
-    for card_id in card_ids:
-        card = validate_model(Card, card_id)
-        if card:
-            list_of_cards.append(card)
-
-    board.cards.extend(list_of_cards)
-    db.session.commit()
-
-    return {
-        "id": board.id,
-        "card_ids": [card.id for card in board.cards]
-    }
+    return create_class_instance(Card, request, ["message"], {"board_id":board_id})

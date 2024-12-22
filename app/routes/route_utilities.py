@@ -29,8 +29,17 @@ def set_new_attributes(instance, req_body):
             setattr(instance, attr, value)
 
 # USED
-def create_class_instance(cls, request, required_fields):
+def create_class_instance(cls, request, required_fields, additional_data=None):
     req_body = request.get_json()
+
+    if additional_data:
+        req_body.update(additional_data)
+
+    for field in required_fields:
+        if field not in req_body:
+            message = {"details": f"Invalid request: missing {field}"}
+            abort(make_response(message, 400))
+
     try:
         new_instance = cls.from_dict(req_body)
     except KeyError as error:

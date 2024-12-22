@@ -5,7 +5,9 @@ from app.models.card import Card
 bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
 
-
+@bp.post("/", strict_slashes=False)
+def create_card():
+    return create_class_instance(Card, request, ["message"])
 
 @bp.get('/')
 def get_all_cards():
