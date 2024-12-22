@@ -84,4 +84,5 @@ def delete_instance(cls, instance_id):
     db.session.delete(instance)
     db.session.commit()
 
-    return {"details": f'{cls.__name__} {instance.id} "{instance.title}" successfully deleted'}, 200
+    return {"details": f'{cls.__name__} {instance.id} successfully deleted'}, 200
+    # return {"details": f'{cls.__name__} {instance.id} "{instance.title}" successfully deleted'}, 200

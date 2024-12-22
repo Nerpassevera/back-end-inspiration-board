@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 class Card(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     message: Mapped[str] = mapped_column(String(255))
-    likes_count: Mapped[int]
+    likes_count: Mapped[int] # dont forget to set defalt to 0
     board_id: Mapped[int] = mapped_column(ForeignKey("board.id"))
     board: Mapped["Board"] = relationship(back_populates="cards")
 
@@ -20,3 +20,7 @@ class Card(db.Model):
             "likes_count": self.likes_count,
             "board_id": self.board_id
     }
+
+    @classmethod
+    def from_dict(cls, data):
+        return Card(message=data["message"], likes_count=0, board_id=1)
