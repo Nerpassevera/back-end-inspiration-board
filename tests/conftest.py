@@ -30,7 +30,7 @@ def app():
 def client(app):
   return app.test_client()
 
-# In your conftest.py, add these fixtures:
+# fixtures for test_setup
 
 @pytest.fixture
 def sample_board(app):
@@ -52,7 +52,8 @@ def sample_card(app, sample_board):
         card = Card(
             message="Test Card",
             likes_count=2,
-            board_id=sample_board.id
+            board_id=sample_board.id,
+            owner="test_owner"
         )
         db.session.add(card)
         db.session.commit()
@@ -60,25 +61,7 @@ def sample_card(app, sample_board):
         # Cleanup
         db.session.delete(card)
         db.session.commit()
-
-# test_setup.py or you can add these to either test file
-def test_database_setup(app):
-    # This test verifies that your app fixture is working
-    assert app.config['TESTING'] is True
-    assert 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']
-
-def test_client_setup(client):
-    # This tests that your client fixture works
-    response = client.get('/')  # or any valid endpoint
-    assert response is not None
-
-def test_sample_board_fixture(sample_board):
-    # This tests that your board fixture creates records correctly
-    assert sample_board.id is not None
-    assert sample_board.title == "Test Board"
-
-def test_sample_card_fixture(sample_card, sample_board):
-    # This tests that your card fixture works and properly relates to board
-    assert sample_card.id is not None
-    assert sample_card.board_id == sample_board.id
-    assert sample_card.message == "Test Card"
+   
+   
+  # test for board
+  
