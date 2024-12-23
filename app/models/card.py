@@ -7,6 +7,7 @@ class Card(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     message: Mapped[str] = mapped_column(String(255))
     likes_count: Mapped[int] = mapped_column(Integer, default=0)
+    owner: Mapped[str] = mapped_column(String(25))
     board_id: Mapped[int] = mapped_column(ForeignKey("board.id"))
     board: Mapped["Board"] = relationship(back_populates="cards")
 
@@ -14,10 +15,11 @@ class Card(db.Model):
         return {
             "id": self.id,
             "message": self.message,
+            "owner": self.owner,
             "likes_count": self.likes_count,
             "board_id": self.board_id
         }
 
     @classmethod
     def from_dict(cls, data):
-        return Card(message=data["message"], board_id=data["board_id"])
+        return Card(message=data["message"], board_id=data["board_id"], owner=data["owner"])
