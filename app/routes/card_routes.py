@@ -28,3 +28,8 @@ def update_card(card_id):
 @bp.delete("/<card_id>", strict_slashes=False)
 def delete_card(card_id):
     return delete_instance(Card, card_id)
+
+
+@bp.patch('/like/<card_id>')
+def increment_likes(card_id):
+    return update_instance(Card, card_id, request, like=True)

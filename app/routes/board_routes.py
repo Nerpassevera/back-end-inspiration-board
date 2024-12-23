@@ -48,8 +48,6 @@ def get_task_of_board(board_id):
 def create_card_for_board(board_id):
 
     new_card = create_class_instance(Card, request, ["message"], {"board_id": board_id})[0]["card"]
-    print(new_card)
-    print(new_card["message"])
     send_card_created_message(new_card["message"])
 
     return new_card

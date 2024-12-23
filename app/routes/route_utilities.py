@@ -26,11 +26,6 @@ def validate_model(cls, cls_id):
 
     return result
 
-def set_new_attributes(instance, req_body):
-    for attr, value in req_body.items():
-        if hasattr(instance, attr):
-            setattr(instance, attr, value)
-
 
 def create_class_instance(cls, request, required_fields, additional_data=None):
     req_body = request.get_json()
@@ -79,11 +74,18 @@ def get_one_instance(cls, instance_id):
     return {cls.__name__.lower(): instance.to_dict() if instance else instance}, 200
 
 
-def update_instance(cls, instance_id, request):
+def set_new_attributes(instance, req_body):
+    for attr, value in req_body.items():
+        if hasattr(instance, attr):
+            setattr(instance, attr, value)
+
+
+def update_instance(cls, instance_id, request, like=None):
     instance = validate_model(cls, instance_id)
     req_body = request.get_json()
-    if cls.__name__ == "Task":
-        req_body["completed_at"] = req_body.get("completed_at", None)
+
+    if like:
+        req_body = update_likes(instance)
 
     set_new_attributes(instance, req_body)
 
@@ -101,8 +103,8 @@ def delete_instance(cls, instance_id):
 
 def send_card_created_message(card_message):
     request_data = {
-        # "channel": "#api-test-channel", # Slack channel for tests
-        "channel": "U07GC9C8Y4X",  # My Slack account ID
+        "channel": "#api-test-channel",  # Slack channel for tests
+        # "channel": "U07GC9C8Y4X",  # My Slack account ID
         "username": "Dream Team's Inspiration Board",
         "text": f"The card \"{card_message}\" has been created!"
     }
@@ -117,3 +119,10 @@ def send_card_created_message(card_message):
     )
 
     return message_status.json()["ok"]
+
+
+def update_likes(instance):
+
+    instance.likes_count += 1
+
+    return {"like_count": instance.likes_count}
