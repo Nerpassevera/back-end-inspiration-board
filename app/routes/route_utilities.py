@@ -1,4 +1,6 @@
+from os import environ
 from flask import abort, make_response
+import requests
 from app.db import db
 
 
@@ -95,3 +97,23 @@ def delete_instance(cls, instance_id):
     db.session.commit()
 
     return {"details": f'{cls.__name__} {instance.id} successfully deleted'}, 200
+
+
+def send_card_created_message(card_message):
+    request_data = {
+        # "channel": "#api-test-channel", # Slack channel for tests
+        "channel": "U07GC9C8Y4X",  # My Slack account ID
+        "username": "Dream Team's Inspiration Board",
+        "text": f"The card \"{card_message}\" has been created!"
+    }
+    message_status = requests.post(
+        url="https://slack.com/api/chat.postMessage",
+        json=request_data,
+        headers={
+            "Authorization": environ.get('SLACK_API_KEY'),
+            "Content-Type": "application/json"
+        },
+        timeout=5
+    )
+
+    return message_status.json()["ok"]

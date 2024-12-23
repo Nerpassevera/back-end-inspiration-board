@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from app.routes.route_utilities import create_class_instance, get_all_instances, get_one_instance, delete_instance, update_instance, validate_model
+from app.routes.route_utilities import *
 from app.models.board import Board
 from app.models.card import Card
 from app.db import db
@@ -46,4 +46,10 @@ def get_task_of_board(board_id):
 
 @bp.post("/<board_id>/cards")
 def create_card_for_board(board_id):
-    return create_class_instance(Card, request, ["message"], {"board_id": board_id})
+
+    new_card = create_class_instance(Card, request, ["message"], {"board_id": board_id})[0]["card"]
+    print(new_card)
+    print(new_card["message"])
+    send_card_created_message(new_card["message"])
+
+    return new_card
