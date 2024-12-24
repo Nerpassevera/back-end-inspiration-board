@@ -76,9 +76,12 @@ def sample_board(app):
     db.session.commit()
     yield board
     
-    db.session.delete(board)
-    db.session.commit()
-
+    try:
+      db.session.query(Board).filter_by(id=board.id).delete()
+      db.session.commit()
+    except:
+      db.session.rollback()
+      
 @pytest.fixture
 def multiple_boards(app):
   '''fixture creating multiple boards for list/collection test'''

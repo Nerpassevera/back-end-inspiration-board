@@ -2,8 +2,7 @@ from app.models.board import Board
 import pytest
 
 # @pytest.mark.skip
-def test_all_boards_empty(client):
-  '''Test getting all board when database is empyt '''
+def test_all_boards_empty_database(client):
   # Act
   response = client.get('/boards/')
   response_body = response.get_json()
@@ -13,8 +12,7 @@ def test_all_boards_empty(client):
   assert response_body == []
 
 # @pytest.mark.skip
-def test_get_all_boards(client, multiple_boards):
-  ''' Test getting all boards wieh there are boards in the db'''
+def test_get_all_boards_in_database(client, multiple_boards):
   # Act
   response = client.get('/boards/')
   response_body = response.get_json()
@@ -29,7 +27,6 @@ def test_get_all_boards(client, multiple_boards):
 
 # @pytest.mark.skip
 def test_get_all_boards_with_invalid_query(client, multiple_boards):
-  ''' Test getting all boards with invaild queery param'''
   # Act
   responese = client.get('/boards/?invalid_param=something')
   responese_body = responese.get_json()
@@ -44,8 +41,7 @@ def test_get_all_boards_with_invalid_query(client, multiple_boards):
   
 
 # @pytest.mark.skip
-def test_get_one_board_success(client, sample_board):
-  ''' Sucessed, get a specific board'''
+def test_get_one_particular_board_success(client, sample_board):
   # Act
   responese = client.get(f'/boards/{sample_board.id}')
   responese_body = responese.get_json()
@@ -58,7 +54,6 @@ def test_get_one_board_success(client, sample_board):
 
   # @pytest.mark.skip
 def test_get_one_board_not_found(client):
-  ''' Board does not exits'''
   # Act
   responese =client.get('/boards/999')
   responese_body = responese.get_json()
@@ -86,15 +81,43 @@ def test_create_board_success(client):
   assert response_body["board"]["owner"] == "test_owner"
   
 #missing data
-def test_create_board_missing_field(client):
-    '''Test creating a board with missing required field'''
+def test_create_board_missing_field_required(client):
+    # Arrange
+    request_body ={
+      "title": "New Test Board"
+      # missing owner
+    }
+    # Act
+    response = client.post('/boards/', json=request_body)
+    response_body = response.get_json()
+    print(f"Response Body: {response_body}")
     
+    # Assert
+    assert response.status_code == 400
+    assert "Invalid request: missing owner" in response_body["details"]
+    
+def test_delete_board_is_sucessful(client, sample_board):
+  # Act
+    response = client.delete(f'/boards/{sample_board.id}')
+    response_body = response.get_json()
+    print(f"Response Body: {response_body}")
+    #Assert
+    assert response.status_code == 200
+    assert response_body =={
+      "details": f"Board {sample_board.id} successfully deleted"
+    }
+    
+def test_delete_board_not_found(client):
+  # Act
+  responese =client.delete('/boards/999')
+  responese_body = responese.get_json()
+  print(f"response body: {responese_body}")
+  
+  # Assert
+  assert responese.status_code == 404
+  assert "was not found" in responese_body["message"]
+  
 
-
-
-# 2. delete_board tests
-#     - Success case
-#     - Not found case
 
 # 3. update_board tests
 #     - Success case
