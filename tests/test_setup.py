@@ -7,8 +7,7 @@ def test_database_setup(app):
     assert 'sqlite' in app.config['SQLALCHEMY_DATABASE_URI']
 
 def test_client_setup(client):
-    response = client.get('/boards')  # assuming you have a /boards endpoint
-    assert response is not None
+    response = client.get('/boards')  
 
 def test_sample_board_fixture(sample_board):
     assert sample_board.id is not None

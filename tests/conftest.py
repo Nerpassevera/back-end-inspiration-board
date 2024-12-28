@@ -62,6 +62,47 @@ def sample_card(app, sample_board):
         db.session.delete(card)
         db.session.commit()
    
-   
-  # test for board
+# fixture for board_routes
+# test  board creation 
+@pytest.fixture
+def sample_board(app):
+  ''' Single board fixture for test'''
+  with app.app_context():
+    board = Board(
+      title="Test Board",
+      owner="test_owner"
+      )
+    db.session.add(board)
+    db.session.commit()
+    yield board
+    
+    try:
+      db.session.query(Board).filter_by(id=board.id).delete()
+      db.session.commit()
+    except:
+      db.session.rollback()
+      
+@pytest.fixture
+def multiple_boards(app):
+  '''fixture creating multiple boards for list/collection test'''
+  with app.app_context():
+    boards =[
+      Board(
+        title="Board 1", owner="owner1"
+      ),
+      Board(
+        title="Board 2", owner="owner2"
+      ),
+      Board(
+        title="Board 3", owner="owner3"
+      )
+    ]  
+    for board in boards:
+      db.session.add(board)
+    db.session.commit()
+    yield boards
+    
+    for board in boards:
+      db.session.delete(board)
+    db.session.commit()
   
