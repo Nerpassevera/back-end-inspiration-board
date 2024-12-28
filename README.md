@@ -108,7 +108,7 @@ back-end-inspiration-board/
     ```bash
     python3 -m venv venv
     source venv/bin/activate  # On Linux/macOS
-    venv\Scriptsctivate     # On Windows
+    venv\Scripts activate     # On Windows
     ```
 
 3. Install dependencies:
@@ -144,20 +144,7 @@ back-end-inspiration-board/
 
 ## Contributing
 
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature-branch
-    ```
-3. Commit your changes:
-    ```bash
-    git commit -m "Add feature"
-    ```
-4. Push to the branch:
-    ```bash
-    git push origin feature-branch
-    ```
-5. Open a pull request.
+This project is built for educational purposes, and contributions are always welcome! Whether you want to enhance the features, fix bugs, or simply learn and explore, feel free to fork the repository, make changes, and open a pull request.
 
 ## License
 
