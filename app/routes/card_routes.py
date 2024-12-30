@@ -4,12 +4,7 @@ from app.models.card import Card
 
 bp = Blueprint("cards_bp", __name__, url_prefix="/cards")
 
-# This route was asked by FE team but may be not useful
-# @bp.post("/", strict_slashes=False)
-# def create_card():
-#     return create_class_instance(Card, request, ["message"])
-
-
+#  Ask FE team if this route is needed. If yes - add it to README
 @bp.get('/')
 def get_all_cards():
     return get_all_instances(Card, request.args)
