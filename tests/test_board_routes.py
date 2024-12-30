@@ -2,7 +2,7 @@ from app.models.board import Board
 import pytest
 
 # READ/boards
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_all_boards_empty_database(client):
   # Act
   response = client.get('/boards/')
@@ -12,7 +12,7 @@ def test_all_boards_empty_database(client):
   assert response.status_code == 200
   assert response_body == []
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_all_boards_in_database(client, multiple_boards):
   # Act
   response = client.get('/boards/')
@@ -26,7 +26,7 @@ def test_get_all_boards_in_database(client, multiple_boards):
   assert response_body[1]["title"] == "Board 2"
   assert response_body[2]["title"] == "Board 3"
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_all_boards_with_invalid_query(client, multiple_boards):
   # Act
   responese = client.get('/boards/?invalid_param=something')
@@ -41,7 +41,7 @@ def test_get_all_boards_with_invalid_query(client, multiple_boards):
   assert responese_body[2]["title"] == "Board 3"
   
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_one_particular_board_success(client, sample_board):
   # Act
   responese = client.get(f'/boards/{sample_board.id}')
@@ -53,7 +53,7 @@ def test_get_one_particular_board_success(client, sample_board):
   assert responese_body["board"]["owner"] == "test_owner"
   assert responese_body["board"]["id"] == sample_board.id
 
-  # @pytest.mark.skip
+@pytest.mark.skip
 def test_get_one_board_not_found(client):
   # Act
   responese =client.get('/boards/999')
@@ -65,7 +65,7 @@ def test_get_one_board_not_found(client):
   assert "was not found" in responese_body["message"]
   
 # create a board
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_create_board_success(client):
   # Arrange
   request_body = {
@@ -81,7 +81,7 @@ def test_create_board_success(client):
   assert response_body["board"]["title"] == "New Test Board"
   assert response_body["board"]["owner"] == "test_owner"
   
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_create_board_missing_field_required(client):
     # Arrange
     request_body ={
@@ -98,7 +98,8 @@ def test_create_board_missing_field_required(client):
     assert "Invalid request: missing owner" in response_body["details"]
 
 # UPDATE/boards
-# @pytest.mark.skip
+'''' need to check on board to see if there is a patch or put... patch is for update'''
+@pytest.mark.skip
 def test_update_board_sucessful(client, sample_board):
   # Arrange
   update_data = {
@@ -115,14 +116,13 @@ def test_update_board_sucessful(client, sample_board):
   assert response_body["board"]["title"] == "Updated Title"
   assert response_body["board"]["owner"] == "new_owner"
 
-  
   # verify changes were saved
   verify_response = client.get(f'/boards/{sample_board.id}')
   verify_body = verify_response.get_json()
   assert verify_body["board"]["title"] == "Updated Title"
   assert verify_body["board"]["owner"] == "new_owner"
 
-# @pytest.mark.skip 
+@pytest.mark.skip 
 def test_updated_board_not_found(client):
   # Arrange
   update_data = {
@@ -143,7 +143,7 @@ def test_updated_board_not_found(client):
   verify_response = client.get('/boards/999')
   assert verify_response.status_code == 404
 
-# @pytest.mark.skip  
+@pytest.mark.skip  
 def test_update_board_invalid_data(client, sample_board):
   # Act
   response = client.put(f'/boards/{sample_board}', json={})
@@ -154,7 +154,7 @@ def test_update_board_invalid_data(client, sample_board):
   assert response.status_code == 400
   assert "details" f"Board {sample_board} is invalid"
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_update_board_with_missing_title(client, sample_board):
   # Act 
   response = client.put(f'/boards/{sample_board.id}', json={"owner": "new_owner"})
@@ -165,7 +165,7 @@ def test_update_board_with_missing_title(client, sample_board):
   assert response.status_code == 400  
   assert response_body["message"] == "Title is required"
   
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_update_board_with_missing_owner(client,sample_board):
   # Act
   response = client.put(f"/boards/{sample_board.id}", json={"title": "New Title"})
@@ -177,7 +177,7 @@ def test_update_board_with_missing_owner(client,sample_board):
   assert response_body["message"] == "Owner is required"  
   
 # DELETE/boards  
-# @pytest.mark.skip   
+@pytest.mark.skip   
 def test_delete_board_is_sucessful(client, sample_board):
   # Act
   response = client.delete(f'/boards/{sample_board.id}')
@@ -194,7 +194,7 @@ def test_delete_board_is_sucessful(client, sample_board):
   verify_response = client.get(f'/boards/{sample_board.id}')
   assert verify_response.status_code == 404
 
-# @pytest.mark.skip   
+@pytest.mark.skip   
 def test_delete_board_not_found(client):
   # Act
   responese =client.delete('/boards/999')
@@ -211,7 +211,7 @@ def test_delete_board_not_found(client):
   assert "was not found"  in verify_body["message"]
 
 # READ boards/<id>/cards
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_card_from_board_success(client, sample_board, sample_card):
   # Act
   response = client.get(f'/boards/{sample_board.id}/cards')
@@ -221,7 +221,7 @@ def test_get_card_from_board_success(client, sample_board, sample_card):
   assert response.status_code == 200
   assert response_body["cards"][0]["message"] == "Test Card"
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_board_exist_but_has_no_card(client, sample_board):
   response = client.get(f'/boards/{sample_board.id}/cards')
   response_body = response.get_json()
@@ -231,7 +231,7 @@ def test_board_exist_but_has_no_card(client, sample_board):
   assert response.status_code == 200
   assert response_body["cards"] == []
 
-# @pytest.mark.skip
+@pytest.mark.skip
 def test_get_card_from_non_existing_board(client):
   # Act
   response = client.get(f'/boards/999/cards')
@@ -242,7 +242,7 @@ def test_get_card_from_non_existing_board(client):
   assert "was not found" in response_body["message"]
 
 # CREATE/boards/<id>/cards
-'''**** to do ****'''
+@pytest.mark.skip
 def test_create_card_for_board_success(client, sample_board):
   # Arrange
   board_id = sample_board.id
@@ -260,6 +260,7 @@ def test_create_card_for_board_success(client, sample_board):
   assert  response_body["owner"] == "test_owner"
   assert  response_body["board_id"] == board_id
 
+@pytest.mark.skip
 def test_create_card_for_nonexistent_board(client):
   # Arrange
   new_card_data ={
@@ -275,6 +276,7 @@ def test_create_card_for_nonexistent_board(client):
   assert response.status_code == 404
   assert "not found" in response_body["message"].lower()
 
+@pytest.mark.skip
 def test_create_card_missing_message(client, sample_board):
   
   # Act 

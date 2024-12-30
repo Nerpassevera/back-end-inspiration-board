@@ -90,7 +90,7 @@ def sample_card(app, sample_board):
       
 @pytest.fixture
 def multiple_boards(app):
-  '''fixture creating multiple boards for list/collection test'''
+  """fixture creating multiple boards for list/collection test"""
   with app.app_context():
     boards =[
       Board(
@@ -111,4 +111,36 @@ def multiple_boards(app):
     for board in boards:
       db.session.delete(board)
     db.session.commit()
-  
+    
+@pytest.fixture
+def multiple_cards(app, sample_board):
+  """fixture creating multiple cards for collection/list test"""
+  with app.app_context():
+      cards = [
+          Card(
+              message="Test Card 1",
+              likes_count=0,
+              board_id=sample_board.id,
+              owner="test_owner1"
+          ),
+          Card(
+              message="Test Card 2",
+              likes_count=5,
+              board_id=sample_board.id,
+              owner="test_owner2"
+          ),
+          Card(
+              message="Test Card 3",
+              likes_count=10,
+              board_id=sample_board.id,
+              owner="test_owner3"
+          )
+      ]
+      for card in cards:
+          db.session.add(card)
+      db.session.commit()
+      yield cards
+      
+      for card in cards:
+          db.session.delete(card)
+      db.session.commit()
