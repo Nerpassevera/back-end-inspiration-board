@@ -46,8 +46,9 @@ def get_task_of_board(board_id):
 
 @bp.post("/<board_id>/cards")
 def create_card_for_board(board_id):
-
+    # add the line below to validate that the board exist. 
+    validate_model(Board, board_id)  
     new_card = create_class_instance(Card, request, ["message", "owner"], {"board_id": board_id})[0]["card"]
     send_card_created_message(new_card["message"])
-
-    return new_card
+    # added the 201 to match what is in the route_utilites.
+    return new_card, 201

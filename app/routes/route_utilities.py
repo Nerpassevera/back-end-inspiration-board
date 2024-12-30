@@ -80,9 +80,29 @@ def set_new_attributes(instance, req_body):
             setattr(instance, attr, value)
 
 
+# def update_instance(cls, instance_id, request, like=None):
+#     instance = validate_model(cls, instance_id)
+#     req_body = request.get_json()
+
+#     if like:
+#         req_body = update_likes(instance)
+
+#     set_new_attributes(instance, req_body)
+
+#     db.session.commit()
+#     return {cls.__name__.lower(): instance.to_dict()}, 200
 def update_instance(cls, instance_id, request, like=None):
     instance = validate_model(cls, instance_id)
     req_body = request.get_json()
+
+    # needed to add this block of code if we are updating a Board, was causing error in pytest
+    if cls.__name__ == 'Board':  
+        if 'title' not in req_body:
+            message = {"message": "Title is required"}
+            abort(make_response(message, 400))
+        if 'owner' not in req_body:
+            message = {"message": "Owner is required"}
+            abort(make_response(message, 400))
 
     if like:
         req_body = update_likes(instance)

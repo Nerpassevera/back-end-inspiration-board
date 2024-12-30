@@ -22,4 +22,9 @@ class Card(db.Model):
 
     @classmethod
     def from_dict(cls, data):
-        return Card(message=data["message"], board_id=data["board_id"], owner=data["owner"])
+        return Card(
+            message=data["message"],
+            board_id=data["board_id"],
+            owner=data["owner"],
+            likes_count=data.get("likes_count", 0)  
+        )

@@ -157,18 +157,25 @@ def test_update_board_invalid_data(client, sample_board):
 # @pytest.mark.skip
 def test_update_board_with_missing_title(client, sample_board):
   # Act 
-  response = client.put(f'/boards/{sample_board}', json={})
+  response = client.put(f'/boards/{sample_board.id}', json={"owner": "new_owner"})
   response_body = response.get_json()
-  print(f'response body: {response_body}')
+  # print(f'response body: {response_body}')
+  
+  # Assert
+  assert response.status_code == 400  
+  assert response_body["message"] == "Title is required"
+  
+# @pytest.mark.skip
+def test_update_board_with_missing_owner(client,sample_board):
+  # Act
+  response = client.put(f"/boards/{sample_board.id}", json={"title": "New Title"})
+  response_body = response.get_json()
+  print(f"response body: {response_body}")
   
   # Assert
   assert response.status_code == 400
-  assert "message" f"Board {sample_board} not found"
+  assert response_body["message"] == "Owner is required"  
   
-'''***** to do *****''' 
-''' test_update_board_with_missing_owner '''
-'''******************'''
-
 # DELETE/boards  
 # @pytest.mark.skip   
 def test_delete_board_is_sucessful(client, sample_board):
@@ -237,9 +244,43 @@ def test_get_card_from_non_existing_board(client):
 # CREATE/boards/<id>/cards
 '''**** to do ****'''
 def test_create_card_for_board_success(client, sample_board):
-  pass
+  # Arrange
+  board_id = sample_board.id
+  new_card_data = {
+    "message": "Test Card",
+    "owner": "test_owner"
+  }
+  # Act
+  response = client.post(f"/boards/{sample_board.id}/cards", json=new_card_data)
+  response_body = response.get_json()
+  print(f"response body: {response_body}")
+  # Assert
+  assert response.status_code == 201
+  assert  response_body["message"] == "Test Card"
+  assert  response_body["owner"] == "test_owner"
+  assert  response_body["board_id"] == board_id
 
+def test_create_card_for_nonexistent_board(client):
+  # Arrange
+  new_card_data ={
+    "message": "New Test Card",
+    "owner": "test_owner"
+  }
+  
+  # Act
+  response = client. post("/boards/999/cards", json=new_card_data)
+  response_body = response.get_json()
+  
+  # Assert
+  assert response.status_code == 404
+  assert "not found" in response_body["message"].lower()
 
-''' test_create_card_for_nonexistent_board'''
-''' test_create_card_missing_message '''
-'''*****************'''
+def test_create_card_missing_message(client, sample_board):
+  
+  # Act 
+  response = client.post(f"/boards/{sample_board.id}/cards", json={"owner": "test_owner"})
+  response_body = response.get_json()
+  print(f'response body: {response_body}')  
+  # Assert
+  assert response.status_code == 400
+  assert "missing message" in response_body["details"].lower()

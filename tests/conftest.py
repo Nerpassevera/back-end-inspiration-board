@@ -34,17 +34,23 @@ def client(app):
 
 @pytest.fixture
 def sample_board(app):
+    """Fixture for a single board - can be used across all test files"""
     with app.app_context():
         board = Board(
-          title="Test Board",
-          owner="test_owner"
-          )
+            title="Test Board",
+            owner="test_owner"
+        )
         db.session.add(board)
         db.session.commit()
+        
         yield board
+        
         # Cleanup
-        db.session.delete(board)
-        db.session.commit()
+        try:
+            db.session.query(Board).filter_by(id=board.id).delete()
+            db.session.commit()
+        except:
+            db.session.rollback()
 
 @pytest.fixture
 def sample_card(app, sample_board):
@@ -64,23 +70,23 @@ def sample_card(app, sample_board):
    
 # fixture for board_routes
 # test  board creation 
-@pytest.fixture
-def sample_board(app):
-  ''' Single board fixture for test'''
-  with app.app_context():
-    board = Board(
-      title="Test Board",
-      owner="test_owner"
-      )
-    db.session.add(board)
-    db.session.commit()
-    yield board
+# @pytest.fixture
+# def sample_board(app):
+#   ''' Single board fixture for test'''
+#   with app.app_context():
+#     board = Board(
+#       title="Test Board",
+#       owner="test_owner"
+#       )
+#     db.session.add(board)
+#     db.session.commit()
+#     yield board
     
-    try:
-      db.session.query(Board).filter_by(id=board.id).delete()
-      db.session.commit()
-    except:
-      db.session.rollback()
+#     try:
+#       db.session.query(Board).filter_by(id=board.id).delete()
+#       db.session.commit()
+#     except:
+#       db.session.rollback()
       
 @pytest.fixture
 def multiple_boards(app):
