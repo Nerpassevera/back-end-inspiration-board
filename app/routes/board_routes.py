@@ -50,4 +50,4 @@ def create_card_for_board(board_id):
     new_card = create_class_instance(Card, request, ["message", "owner"], {
                                      "board_id": board_id})[0]["card"]
     send_card_created_message(new_card["message"])
-    return new_card, 201
+    return new_card

@@ -11,7 +11,8 @@ class Board(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(50))
     owner: Mapped[str] = mapped_column(String(25))
-    cards: Mapped[list["Card"]] = relationship(back_populates="board")
+    cards: Mapped[list["Card"]] = relationship(
+        "Card", back_populates="board", cascade="all, delete", passive_deletes=True)
 
     def to_dict(self):
         return {
