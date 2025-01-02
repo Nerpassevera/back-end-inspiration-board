@@ -21,6 +21,17 @@ You can access the deployed project [here](https://your-deployed-project-link.co
 - **[Alembic](https://alembic.sqlalchemy.org/):** A lightweight database migration tool for SQLAlchemy.
 - **[PostgreSQL](https://www.postgresql.org/):** An open-source, powerful, and advanced object-relational database system.
 
+### Continuous Integration
+
+This project includes a simple CI pipeline using GitHub Actions to automate testing.
+
+On every push or pull request to the main branch, the pipeline:
+1.	Sets up Python 3.12.
+2.	Installs dependencies listed in requirements.txt.
+3.	Runs the test suite with pytest.
+
+The workflow ensures the codebase remains robust and reliable by automatically executing all tests before changes are merged.
+
 ### Testing
 
 - **[Pytest](https://docs.pytest.org/):** A framework that makes building simple and scalable test cases easy.
