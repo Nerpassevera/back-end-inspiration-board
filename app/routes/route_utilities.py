@@ -51,16 +51,7 @@ def create_class_instance(cls, request, required_fields, additional_data=None):
 
 
 def get_all_instances(cls, args):
-    sort = args.get("sort")
-    # query = db.select(cls).order_by(cls.title.desc() if sort=="desc" else cls.title)
     query = db.select(cls)
-
-    sort_field = "message" if hasattr(cls, "message") else "title"
-
-    if sort == "desc":
-        query = query.order_by(getattr(cls, sort_field).desc())
-    else:
-        query = query.order_by(getattr(cls, sort_field))
 
     apply_filters(cls, args.items(), query)
 
@@ -75,34 +66,18 @@ def get_one_instance(cls, instance_id):
 
 
 def set_new_attributes(instance, req_body):
+
     for attr, value in req_body.items():
         if hasattr(instance, attr):
             setattr(instance, attr, value)
+        else:
+            message = {"message": f"{attr.capitalize()} is required"}
+            abort(make_response(message, 400))
 
 
-# def update_instance(cls, instance_id, request, like=None):
-#     instance = validate_model(cls, instance_id)
-#     req_body = request.get_json()
-
-#     if like:
-#         req_body = update_likes(instance)
-
-#     set_new_attributes(instance, req_body)
-
-#     db.session.commit()
-#     return {cls.__name__.lower(): instance.to_dict()}, 200
 def update_instance(cls, instance_id, request, like=None):
     instance = validate_model(cls, instance_id)
     req_body = request.get_json()
-
-    # needed to add this block of code if we are updating a Board, was causing error in pytest
-    if cls.__name__ == 'Board':  
-        if 'title' not in req_body:
-            message = {"message": "Title is required"}
-            abort(make_response(message, 400))
-        if 'owner' not in req_body:
-            message = {"message": "Owner is required"}
-            abort(make_response(message, 400))
 
     if like:
         req_body = update_likes(instance)
@@ -145,4 +120,4 @@ def update_likes(instance):
 
     instance.likes_count += 1
 
-    return {"like_count": instance.likes_count}
+    return {"likes_count": instance.likes_count}
