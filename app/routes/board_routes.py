@@ -48,6 +48,7 @@ def get_task_of_board(board_id):
 def create_card_for_board(board_id):
     validate_model(Board, board_id)
     new_card = create_class_instance(Card, request, ["message", "owner"], {
-                                     "board_id": board_id})[0]["card"]
-    send_card_created_message(new_card["message"])
+                                     "board_id": board_id})
+    print(new_card)
+    send_card_created_message(new_card[0]["card"]["message"])
     return new_card

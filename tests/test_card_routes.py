@@ -40,7 +40,7 @@ def test_create_card_success(client, sample_board):
     with client.application.app_context():
         response = client.post(
             f'/boards/{sample_board.id}/cards', json=request_body)
-        response_body = response.get_json()
+        response_body = response.get_json()["card"]
         print(f"Response Body: {response_body}")
 
         # Assert

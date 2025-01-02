@@ -278,7 +278,7 @@ def test_create_card_for_board_success(client, sample_board):
     # Act
     response = client.post(
         f"/boards/{sample_board.id}/cards", json=new_card_data)
-    response_body = response.get_json()
+    response_body = response.get_json()["card"]
     print(f"response body: {response_body}")
     # Assert
     assert response.status_code == 201
