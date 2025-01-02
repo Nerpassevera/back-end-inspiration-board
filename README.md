@@ -24,6 +24,37 @@ You can access the deployed project [here](https://your-deployed-project-link.co
 ### Testing
 
 - **[Pytest](https://docs.pytest.org/):** A framework that makes building simple and scalable test cases easy.
+- **Test Suite Overview:**
+   - Route validation tests
+   - Database operation tests 
+   - Error handling tests
+   - Response format validation
+
+ - **Test Categories Implemented:**
+   #### Route Validation
+   - HTTP methods (GET, POST, PUT/PATCH, DELETE)
+   - Invalid URL parameter handling
+   - 404 handling for non-existent resources
+
+   #### Database Operations  
+   - CRUD operations for boards/cards
+   - Board-card relationships
+   - Transaction handling (commit/rollback)
+
+   #### Error Handling
+   - 404 responses for missing resources 
+   - Missing field validation
+   - Status code verification (200, 201, 400, 404)
+
+   #### API Response Formatting
+   - JSON structure validation
+   - Data type verification
+   - Response status code checks
+
+ - **Test Infrastructure:**
+   - Custom fixtures for database setup
+   - Test client configuration
+   - Sample data generation
 
 ### Deployment
 
