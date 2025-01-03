@@ -1,7 +1,6 @@
 from app.models.board import Board
 import pytest
 
-
 # READ/boards
 # @pytest.mark.skip
 def test_all_boards_empty_database(client):
@@ -27,7 +26,6 @@ def test_get_all_boards_in_database(client, multiple_boards):
     assert response_body[0]["title"] == "Board 1"
     assert response_body[1]["title"] == "Board 2"
     assert response_body[2]["title"] == "Board 3"
-
 
 # @pytest.mark.skip
 def test_get_all_boards_with_invalid_query(client, multiple_boards):
@@ -62,8 +60,6 @@ def test_get_one_board_not_found(client):
     # Act
     responese = client.get('/boards/999')
     responese_body = responese.get_json()
-    print(f"response body: {responese_body}")
-
     # Assert
     assert responese.status_code == 404
     assert "was not found" in responese_body["message"]
@@ -77,7 +73,6 @@ def test_create_board_success(client):
         "title": "New Test Board",
         "owner": "test_owner"
     }
-
     # Act
     response = client.post('/boards/', json=request_body)
     response_body = response.get_json()
@@ -85,7 +80,6 @@ def test_create_board_success(client):
     assert response.status_code == 201
     assert response_body["board"]["title"] == "New Test Board"
     assert response_body["board"]["owner"] == "test_owner"
-
 
 # @pytest.mark.skip
 def test_create_board_missing_field_required(client):
@@ -97,8 +91,6 @@ def test_create_board_missing_field_required(client):
     # Act
     response = client.post('/boards/', json=request_body)
     response_body = response.get_json()
-    print(f"Response Body: {response_body}")
-
     # Assert
     assert response.status_code == 400
     assert "Invalid request: missing owner" in response_body["details"]
@@ -106,8 +98,6 @@ def test_create_board_missing_field_required(client):
 
 
 # UPDATE/boards
-'''' need to check on board to see if there is a patch or put... patch is for update'''
-
 # @pytest.mark.skip
 def test_update_board_sucessful(client, sample_board):
     # Arrange
@@ -118,19 +108,15 @@ def test_update_board_sucessful(client, sample_board):
     # Act
     response = client.put(f'/boards/{sample_board.id}', json=update_data)
     response_body = response.get_json()
-    print(f"response body: {response_body}")
-
     # Assert
     assert response.status_code == 200
     assert response_body["board"]["title"] == "Updated Title"
     assert response_body["board"]["owner"] == "new_owner"
-
     # verify changes were saved
     verify_response = client.get(f'/boards/{sample_board.id}')
     verify_body = verify_response.get_json()
     assert verify_body["board"]["title"] == "Updated Title"
     assert verify_body["board"]["owner"] == "new_owner"
-
 
 # @pytest.mark.skip
 def test_updated_board_not_found(client):
@@ -139,20 +125,15 @@ def test_updated_board_not_found(client):
         "title": "New Title",
         "owner": "new_owner"
     }
-
     # Act
     responese = client.put('/boards/999', json=update_data)
     responese_body = responese.get_json()
-    print(f"response body: {responese_body}")
-
     # Assert
     assert responese.status_code == 404
     assert "was not found" in responese_body["message"]
-
     # verify
     verify_response = client.get('/boards/999')
     assert verify_response.status_code == 404
-
 
 # @pytest.mark.skip
 def test_update_board_invalid_data(client, sample_board):
@@ -161,40 +142,30 @@ def test_update_board_invalid_data(client, sample_board):
     response_body = response.get_json()
     print(f"response body: {response_body}")
     # Assert
-
     assert response.status_code == 400
     assert "details" f"Board {sample_board} is invalid"
 
-
-@pytest.mark.skip
-# This test should not return 400 as we use PATCH (not PUT)
-# which means that the title stays intact if we update only thw owner
+# @pytest.mark.skip
 def test_update_board_with_missing_title(client, sample_board):
     # Act
     response = client.put(
         f'/boards/{sample_board.id}', json={"owner": "new_owner"})
-    response_body = response.get_json()
-    # print(f'response body: {response_body}')
-
+    response_body = response.get_json()["board"]
     # Assert
-    assert response.status_code == 400
-    assert response_body["message"] == "Title is required"
-
-
-@pytest.mark.skip
-# This test should not return 400 as we use PATCH (not PUT)
-# which means that the owner stays intact if we update only title
+    assert response.status_code == 200
+    assert response_body["owner"] == "new_owner"
+    assert response_body["title"] == "Test Board"
+ 
+# @pytest.mark.skip
 def test_update_board_with_missing_owner(client, sample_board):
     # Act
     response = client.put(
         f"/boards/{sample_board.id}", json={"title": "New Title"})
-    response_body = response.get_json()
-    print(f"response body: {response_body}")
-
+    response_body = response.get_json()["board"]
     # Assert
-    assert response.status_code == 400
-    assert response_body["message"] == "Owner is required"
-
+    assert response.status_code == 200
+    assert response_body["owner"] == "test_owner"
+    assert response_body["title"] == "New Title"
 
 # DELETE/boards
 # @pytest.mark.skip
@@ -220,7 +191,6 @@ def test_delete_board_not_found(client):
     # Act
     responese = client.delete('/boards/999')
     responese_body = responese.get_json()
-    print(f"response body: {responese_body}")
 
     # Assert
     assert responese.status_code == 404
@@ -248,8 +218,6 @@ def test_get_card_from_board_success(client, sample_board, sample_card):
 def test_board_exist_but_has_no_card(client, sample_board):
     response = client.get(f'/boards/{sample_board.id}/cards')
     response_body = response.get_json()
-    print(f"response body: {response_body}")
-
     # Assert
     assert response.status_code == 200
     assert response_body["cards"] == []
@@ -279,8 +247,7 @@ def test_create_card_for_board_success(client, sample_board):
     response = client.post(
         f"/boards/{sample_board.id}/cards", json=new_card_data)
     response_body = response.get_json()["card"]
-    print(f"response body: {response_body}")
-    # Assert
+       # Assert
     assert response.status_code == 201
     assert response_body["message"] == "Test Card"
     assert response_body["owner"] == "test_owner"
@@ -311,7 +278,6 @@ def test_create_card_missing_message(client, sample_board):
     response = client.post(
         f"/boards/{sample_board.id}/cards", json={"owner": "test_owner"})
     response_body = response.get_json()
-    print(f'response body: {response_body}')
-    # Assert
+       # Assert
     assert response.status_code == 400
     assert "missing message" in response_body["details"].lower()
