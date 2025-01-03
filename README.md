@@ -2,7 +2,7 @@
 # Inspiration Board API
 
 A Flask-based RESTful API for managing inspiration boards and cards.
-You can access the deployed project [here](https://your-deployed-project-link.com).
+You can access the deployed project [here](https://inspiration-board-app-frontend-62f20317cc28.herokuapp.com/).
 
 ## Features
 
