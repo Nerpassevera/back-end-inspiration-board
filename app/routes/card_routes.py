@@ -24,3 +24,4 @@ def delete_card(card_id):
 @bp.patch('/like/<card_id>')
 def increment_likes(card_id):
     return update_instance(Card, card_id, request, like=True)
+

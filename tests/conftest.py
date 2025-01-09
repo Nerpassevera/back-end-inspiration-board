@@ -14,7 +14,7 @@ def app():
     
   }
   app = create_app(test_config)
-  
+
   @request_finished.connect_via(app)
   def expire_session(sender, response, **extra):
     db.session.remove()

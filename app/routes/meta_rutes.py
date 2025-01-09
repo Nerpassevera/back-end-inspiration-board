@@ -24,6 +24,6 @@ def welcome_message():
         "  PATCH  /cards/<card_id>         - Update a specific card\n"
         "  DELETE /cards/<card_id>         - Delete a specific card\n"
         "  PATCH  /cards/like/<card_id>    - Increment like count for a card\n\n"
-        "Deployment URL: https://link-from-fe-team"
+        "Deployment URL: https://inspiration-board-app-frontend-62f20317cc28.herokuapp.com/"
     )
     return Response(message, content_type="text/plain")
